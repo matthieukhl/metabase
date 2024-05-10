@@ -1,22 +1,28 @@
 import {
+  setupRecentViewsEndpoints,
   setupSearchEndpoints,
   setupSettingsEndpoints,
 } from "__support__/server-mocks";
 import { renderWithProviders, screen } from "__support__/ui";
 import { defaultRootCollection } from "metabase/admin/permissions/pages/CollectionPermissionsPage/tests/setup";
-import type { SearchResult } from "metabase-types/api";
 import {
   createMockCollection,
   createMockModelResult,
 } from "metabase-types/api/mocks";
 import { createMockSetupState } from "metabase-types/store/mocks";
 
+import type { ModelResult, RecentModel } from "../types";
+
 import { BrowseModels } from "./BrowseModels";
 
-const setup = (modelCount: number) => {
+const setup = (
+  modelCount: number,
+  recentlyViewedModels: RecentModel[] = [],
+) => {
   const models = mockModels.slice(0, modelCount);
   setupSearchEndpoints(models);
   setupSettingsEndpoints([]);
+  setupRecentViewsEndpoints(recentlyViewedModels);
   return renderWithProviders(<BrowseModels />, {
     storeInitialState: {
       setup: createMockSetupState({
@@ -89,7 +95,7 @@ const collectionGrande = createMockCollection({
   ],
 });
 
-const mockModels: SearchResult[] = [
+const mockModels: ModelResult[] = [
   {
     id: 0,
     name: "Model 0",
@@ -285,5 +291,24 @@ describe("BrowseModels", () => {
     expect(
       await screen.findAllByTestId("breadcrumbs-for-collection: Alpha"),
     ).toHaveLength(3);
+  });
+  it("displays recently viewed models", async () => {
+    setup(25, mockModels.slice(10, 15) as RecentModel[]);
+    expect(await screen.findByText("Model 1")).toBeInTheDocument();
+    expect(
+      await screen.findByTestId("recently-viewed-model-10"),
+    ).toBeInTheDocument();
+    expect(
+      await screen.findByTestId("recently-viewed-model-11"),
+    ).toBeInTheDocument();
+    expect(
+      await screen.findByTestId("recently-viewed-model-12"),
+    ).toBeInTheDocument();
+    expect(
+      await screen.findByTestId("recently-viewed-model-13"),
+    ).toBeInTheDocument();
+    expect(
+      await screen.findByTestId("recently-viewed-model-14"),
+    ).toBeInTheDocument();
   });
 });

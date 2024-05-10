@@ -1,7 +1,7 @@
 import _ from "underscore";
 
+import type { ModelResult } from "metabase/browse/types";
 import type {
-  ModelResult,
   SearchResponse,
   SearchResult,
   SearchScore,

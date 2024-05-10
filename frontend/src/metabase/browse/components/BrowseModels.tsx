@@ -1,14 +1,15 @@
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { c, t } from "ttag";
 
 import NoResults from "assets/img/no_results.svg";
+import type { SearchRequest } from "metabase-types/api";
 import { useSearchQuery } from "metabase/api";
 import LoadingAndErrorWrapper from "metabase/components/LoadingAndErrorWrapper";
 import { color } from "metabase/lib/colors";
 import { PLUGIN_CONTENT_VERIFICATION } from "metabase/plugins";
 import { Box, Flex, Group, Icon, Stack, Title } from "metabase/ui";
-import type { ModelResult, SearchRequest } from "metabase-types/api";
 
+import type { ModelResult } from "../types";
 import type { ActualModelFilters } from "../utils";
 import { filterModels } from "../utils";
 
@@ -17,10 +18,11 @@ import {
   BrowseHeader,
   BrowseMain,
   BrowseSection,
-  CenteredEmptyState,
+  CenteredEmptyState
 } from "./BrowseContainer.styled";
 import { ModelExplanationBanner } from "./ModelExplanationBanner";
 import { ModelsTable } from "./ModelsTable";
+import { RecentlyViewedModels } from "./RecentlyViewedModels";
 
 const { availableModelFilters, useModelFilterSettings, ModelFilterControls } =
   PLUGIN_CONTENT_VERIFICATION;
@@ -76,15 +78,17 @@ export const BrowseModelsBody = ({
   };
   const { data, error, isLoading } = useSearchQuery(query);
 
-  const filteredModels = useMemo(() => {
+  const applyCurrentFilters = useCallback(
+    (models: ModelResult[]) =>
+      filterModels(models, actualModelFilters, availableModelFilters),
+    [actualModelFilters],
+  );
+
+  const { unfilteredModels, filteredModels } = useMemo(() => {
     const unfilteredModels = (data?.data as ModelResult[]) ?? [];
-    const filteredModels = filterModels(
-      unfilteredModels,
-      actualModelFilters,
-      availableModelFilters,
-    );
-    return filteredModels;
-  }, [data, actualModelFilters]);
+    const filteredModels = applyCurrentFilters(unfilteredModels);
+    return { unfilteredModels, filteredModels };
+  }, [data, applyCurrentFilters]);
 
   if (error || isLoading) {
     return (
@@ -100,6 +104,10 @@ export const BrowseModelsBody = ({
     return (
       <Stack mb="lg" spacing="md">
         <ModelExplanationBanner />
+        <RecentlyViewedModels
+          modelCount={unfilteredModels.length}
+          applyCurrentFilters={applyCurrentFilters}
+        />
         <ModelsTable models={filteredModels} />
       </Stack>
     );
