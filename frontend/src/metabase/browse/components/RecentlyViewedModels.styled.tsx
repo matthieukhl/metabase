@@ -1,8 +1,7 @@
 import styled from "@emotion/styled";
 
-import { Grid } from "metabase/ui";
 
-export const RecentlyViewedModelsGrid = styled(Grid)`
+export const RecentlyViewedModelsGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
   gap: 0.5rem;
