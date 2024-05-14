@@ -3,7 +3,7 @@ import {
   setupSearchEndpoints,
   setupSettingsEndpoints,
 } from "__support__/server-mocks";
-import { renderWithProviders, screen } from "__support__/ui";
+import { renderWithProviders, screen, waitFor, within } from "__support__/ui";
 import { defaultRootCollection } from "metabase/admin/permissions/pages/CollectionPermissionsPage/tests/setup";
 import {
   createMockCollection,
@@ -292,23 +292,23 @@ describe("BrowseModels", () => {
       await screen.findAllByTestId("breadcrumbs-for-collection: Alpha"),
     ).toHaveLength(3);
   });
+
   it("displays recently viewed models", async () => {
     setup(25, mockModels.slice(10, 15) as RecentModel[]);
     expect(await screen.findByText("Model 1")).toBeInTheDocument();
-    expect(
-      await screen.findByTestId("recently-viewed-model-10"),
-    ).toBeInTheDocument();
-    expect(
-      await screen.findByTestId("recently-viewed-model-11"),
-    ).toBeInTheDocument();
-    expect(
-      await screen.findByTestId("recently-viewed-model-12"),
-    ).toBeInTheDocument();
-    expect(
-      await screen.findByTestId("recently-viewed-model-13"),
-    ).toBeInTheDocument();
-    expect(
-      await screen.findByTestId("recently-viewed-model-14"),
-    ).toBeInTheDocument();
+    const getGrid = async () =>
+      await screen.findByRole("grid", { name: /Recents/ });
+    await waitFor(async () => {
+      expect(
+        await within(await getGrid()).findByText("Model 10"),
+      ).toBeInTheDocument();
+    });
+    const grid = await getGrid();
+    expect(await within(grid).findByText("Model 11")).toBeInTheDocument();
+    expect(await within(grid).findByText("Model 12")).toBeInTheDocument();
+    expect(await within(grid).findByText("Model 13")).toBeInTheDocument();
+    expect(await within(grid).findByText("Model 14")).toBeInTheDocument();
+    expect(within(grid).queryByText("Model 9")).not.toBeInTheDocument();
+    expect(within(grid).queryByText("Model 15")).not.toBeInTheDocument();
   });
 });

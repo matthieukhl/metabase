@@ -50,15 +50,9 @@ export const RecentlyViewedModels = ({
         loading={isLoading}
         blankComponent={<Box mih="129px" />}
       >
-        <RecentlyViewedModelsGrid aria-labelledby={headerId}>
+        <RecentlyViewedModelsGrid role="grid" aria-labelledby={headerId}>
           {slicedArray.map(model => {
-            return (
-              <ModelCard
-                model={model}
-                key={`model-${model.id}`}
-                data-testid={`recently-viewed-model-${model.id}`}
-              />
-            );
+            return <ModelCard model={model} key={`model-${model.id}`} />;
           })}
         </RecentlyViewedModelsGrid>
       </DelayedLoadingAndErrorWrapper>
