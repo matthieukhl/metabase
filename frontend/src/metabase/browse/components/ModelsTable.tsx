@@ -6,14 +6,14 @@ import NoResults from "assets/img/no_results.svg";
 import EntityItem from "metabase/components/EntityItem";
 import {
   SortableColumnHeader,
-  type SortingOptions
+  type SortingOptions,
 } from "metabase/components/ItemsTable/BaseItemsTable";
 import {
   ItemLink,
   ItemNameCell,
   Table,
   TableColumn,
-  TBody
+  TBody,
 } from "metabase/components/ItemsTable/BaseItemsTable.styled";
 import { Columns, SortDirection } from "metabase/components/ItemsTable/Columns";
 import type { ResponsiveProps } from "metabase/components/ItemsTable/utils";
@@ -33,9 +33,10 @@ import { CenteredEmptyState } from "./BrowseContainer.styled";
 import { CollectionBreadcrumbsWithTooltip } from "./CollectionBreadcrumbsWithTooltip";
 import { EllipsifiedWithMarkdownTooltip } from "./EllipsifiedWithMarkdownTooltip";
 import {
-  LoadingAndErrorWrapperTableRow, ModelCell,
+  LoadingAndErrorWrapperTableRow,
+  ModelCell,
   ModelNameColumn,
-  ModelTableRow
+  ModelTableRow,
 } from "./ModelsTable.styled";
 import { getModelDescription, sortModels } from "./utils";
 
