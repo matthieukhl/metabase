@@ -8,6 +8,7 @@ import { defaultRootCollection } from "metabase/admin/permissions/pages/Collecti
 import {
   createMockCollection,
   createMockModelResult,
+  createMockSearchResult,
 } from "metabase-types/api/mocks";
 import { createMockSetupState } from "metabase-types/store/mocks";
 
@@ -20,7 +21,7 @@ const setup = (
   recentlyViewedModels: RecentModel[] = [],
 ) => {
   const models = mockModels.slice(0, modelCount);
-  setupSearchEndpoints(models);
+  setupSearchEndpoints(models.map(model => createMockSearchResult(model)));
   setupSettingsEndpoints([]);
   setupRecentViewsEndpoints(recentlyViewedModels);
   return renderWithProviders(<BrowseModels />, {

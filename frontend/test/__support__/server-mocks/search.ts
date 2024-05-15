@@ -1,11 +1,8 @@
 import fetchMock from "fetch-mock";
 
-import type { CollectionItem } from "metabase-types/api";
-import type { WeakSearchResult } from "metabase-types/entities/search";
+import type { CollectionItem, SearchResult } from "metabase-types/api";
 
-export function setupSearchEndpoints(
-  items: (CollectionItem | WeakSearchResult)[],
-) {
+export function setupSearchEndpoints(items: (CollectionItem | SearchResult)[]) {
   fetchMock.get("path:/api/search", uri => {
     const url = new URL(uri);
     const models = url.searchParams.getAll("models");
