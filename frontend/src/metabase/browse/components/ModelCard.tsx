@@ -1,4 +1,10 @@
-import * as P from "metabase/collections/components/PinnedItemCard/PinnedItemCard.styled";
+import {
+  Body,
+  Description,
+  ItemCard,
+  ItemIcon,
+  ItemLink,
+} from "metabase/collections/components/PinnedItemCard/PinnedItemCard.styled";
 import type { LinkProps } from "metabase/core/components/Link";
 import * as Urls from "metabase/lib/urls";
 import { Flex } from "metabase/ui";
@@ -25,23 +31,23 @@ export const ModelCard = ({
   const description = getModelDescription(model);
 
   return (
-    <P.ItemLink
+    <ItemLink
       {...props}
       key={model.id}
       to={Urls.model(model as unknown as Partial<Card>)}
       onClick={() => trackModelClick(model.id)}
     >
-      <P.ItemCard flat>
-        <P.Body>
+      <ItemCard flat>
+        <Body>
           <Flex pb="sm" align="center" h="2.75rem">
-            <P.ItemIcon {...icon} style={{ flexShrink: 0 }} />
+            <ItemIcon {...icon} style={{ flexShrink: 0 }} />
           </Flex>
           <Title tooltipMaxWidth="20rem" id={headingId} placement="bottom">
             {model.name}
           </Title>
-          <P.Description>{description.replace(/\s+/g, " ")}</P.Description>
-        </P.Body>
-      </P.ItemCard>
-    </P.ItemLink>
+          <Description>{description.replace(/\s+/g, " ")}</Description>
+        </Body>
+      </ItemCard>
+    </ItemLink>
   );
 };
