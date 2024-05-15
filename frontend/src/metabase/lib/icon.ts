@@ -5,10 +5,11 @@ import type {
   CardDisplayType,
   Collection,
   SearchModel,
+  CollectionItemModel,
 } from "metabase-types/api";
 
 export type ObjectWithModel = {
-  model: SearchModel;
+  model: SearchModel | CollectionItemModel;
   authority_level?: "official" | string | null;
   collection_authority_level?: "official" | string | null;
   moderated_status?: "verified" | string | null;
@@ -16,7 +17,7 @@ export type ObjectWithModel = {
   type?: Collection["type"];
 };
 
-const modelIconMap: Record<SearchModel, IconName> = {
+const modelIconMap: Record<SearchModel | CollectionItemModel, IconName> = {
   collection: "folder",
   database: "database",
   table: "table",
@@ -27,9 +28,12 @@ const modelIconMap: Record<SearchModel, IconName> = {
   card: "table",
   segment: "segment",
   metric: "funnel",
+  snippet: "unknown",
 };
 
-const secondaryModelIconMap: Partial<Record<SearchModel, IconName>> = {
+const secondaryModelIconMap: Partial<
+  Record<SearchModel | CollectionItemModel, IconName>
+> = {
   table: "database",
 };
 
