@@ -2,12 +2,12 @@ import { useCallback, useMemo } from "react";
 import { c, t } from "ttag";
 
 import NoResults from "assets/img/no_results.svg";
-import type { SearchRequest } from "metabase-types/api";
 import { useSearchQuery } from "metabase/api";
 import LoadingAndErrorWrapper from "metabase/components/LoadingAndErrorWrapper";
 import { color } from "metabase/lib/colors";
 import { PLUGIN_CONTENT_VERIFICATION } from "metabase/plugins";
 import { Box, Flex, Group, Icon, Stack, Title } from "metabase/ui";
+import type { SearchRequest } from "metabase-types/api";
 
 import type { ModelResult } from "../types";
 import type { ActualModelFilters } from "../utils";
@@ -18,7 +18,7 @@ import {
   BrowseHeader,
   BrowseMain,
   BrowseSection,
-  CenteredEmptyState
+  CenteredEmptyState,
 } from "./BrowseContainer.styled";
 import { ModelExplanationBanner } from "./ModelExplanationBanner";
 import { ModelsTable } from "./ModelsTable";
