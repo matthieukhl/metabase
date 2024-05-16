@@ -144,6 +144,7 @@ export const getCartesianChartModel = (
   const { formatters: seriesLabelsFormatters, compactSeriesDataKeys } =
     getSeriesLabelsFormatters(
       seriesModels,
+      stackModels,
       transformedDataset,
       settings,
       renderingContext,
