@@ -22,7 +22,7 @@ import {
 } from "metabase/lib/dom";
 import { useDispatch } from "metabase/lib/redux";
 import { FilterApplyButton } from "metabase/parameters/components/FilterApplyButton";
-import SyncedParametersList from "metabase/parameters/components/SyncedParametersList/SyncedParametersList";
+import { SyncedParametersList } from "metabase/parameters/components/ParametersList/SyncedParametersList";
 import { getVisibleParameters } from "metabase/parameters/utils/ui";
 import { setOptions } from "metabase/redux/embed";
 import { getSetting } from "metabase/selectors/settings";

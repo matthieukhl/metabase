@@ -18,7 +18,7 @@ import type {
 } from "metabase/dashboard/types";
 import { getMainElement, isSmallScreen } from "metabase/lib/dom";
 import { FilterApplyButton } from "metabase/parameters/components/FilterApplyButton";
-import SyncedParametersList from "metabase/parameters/components/SyncedParametersList/SyncedParametersList";
+import { SyncedParametersList } from "metabase/parameters/components/ParametersList";
 import { getVisibleParameters } from "metabase/parameters/utils/ui";
 import type { EmbeddingParameterVisibility } from "metabase/public/lib/types";
 import type Metadata from "metabase-lib/v1/metadata/Metadata";

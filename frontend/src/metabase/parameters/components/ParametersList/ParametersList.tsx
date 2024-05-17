@@ -1,38 +1,41 @@
-/* eslint-disable react/prop-types */
-import { useSensor, PointerSensor } from "@dnd-kit/core";
+import { PointerSensor, useSensor } from "@dnd-kit/core";
 import cx from "classnames";
 import { useCallback, useMemo } from "react";
 
+import type {
+  DragEndEvent,
+  RenderItemProps,
+} from "metabase/core/components/Sortable";
 import { SortableList } from "metabase/core/components/Sortable";
 import CS from "metabase/css/core/index.css";
+import type { ParametersListProps } from "metabase/parameters/components/ParametersList";
 import { getVisibleParameters } from "metabase/parameters/utils/ui";
 import { Icon } from "metabase/ui";
+import type { Parameter } from "metabase-types/api";
 
-import { ParameterWidget } from "./ParameterWidget";
+import { ParameterWidget } from "../ParameterWidget";
 
-const getId = valuePopulatedParameter => valuePopulatedParameter.id;
+const getId = (valuePopulatedParameter: Parameter) =>
+  valuePopulatedParameter.id;
 
-function ParametersList({
+export const ParametersList = ({
   className,
-
-  parameters,
-  question,
+  commitImmediately = false,
   dashboard,
   editingParameter,
-
-  isFullscreen,
-  isNightMode,
+  enableParameterRequiredBehavior,
   hideParameters,
   isEditing,
-  vertical,
-  commitImmediately,
-
-  setParameterValueToDefault,
-  setParameterValue,
-  setParameterIndex,
+  isFullscreen,
+  isNightMode,
+  parameters,
+  question,
   setEditingParameter,
-  enableParameterRequiredBehavior,
-}) {
+  setParameterIndex,
+  setParameterValue,
+  setParameterValueToDefault,
+  vertical = false,
+}: ParametersListProps) => {
   const pointerSensor = useSensor(PointerSensor, {
     activationConstraint: { distance: 15 },
   });
@@ -43,15 +46,18 @@ function ParametersList({
   );
 
   const handleSortEnd = useCallback(
-    ({ id, newIndex }) => {
+    ({ id, newIndex }: DragEndEvent) => {
       if (setParameterIndex) {
-        setParameterIndex(id, newIndex);
+        setParameterIndex(id as string, newIndex);
       }
     },
     [setParameterIndex],
   );
 
-  const renderItem = ({ item: valuePopulatedParameter, id }) => (
+  const renderItem = ({
+    item: valuePopulatedParameter,
+    id,
+  }: RenderItemProps<Parameter>) => (
     <ParameterWidget
       key={`sortable-${id}`}
       className={cx({ [CS.mb2]: vertical })}
@@ -66,7 +72,8 @@ function ParametersList({
       setEditingParameter={setEditingParameter}
       setValue={
         setParameterValue &&
-        (value => setParameterValue(valuePopulatedParameter.id, value))
+        ((value: string) =>
+          setParameterValue(valuePopulatedParameter.id, value))
       }
       setParameterValueToDefault={setParameterValueToDefault}
       enableParameterRequiredBehavior={enableParameterRequiredBehavior}
@@ -108,11 +115,4 @@ function ParametersList({
       />
     </div>
   ) : null;
-}
-
-ParametersList.defaultProps = {
-  vertical: false,
-  commitImmediately: false,
 };
-
-export default ParametersList;

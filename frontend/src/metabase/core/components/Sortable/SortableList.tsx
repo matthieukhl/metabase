@@ -19,11 +19,11 @@ export type DragEndEvent = {
   itemIds: ItemId[];
 };
 
-interface RenderItemProps<T> {
+export type RenderItemProps<T> = {
   item: T;
   id: ItemId;
   isDragOverlay?: boolean;
-}
+};
 interface useSortableListProps<T> {
   items: T[];
   getId: (item: T) => ItemId;
