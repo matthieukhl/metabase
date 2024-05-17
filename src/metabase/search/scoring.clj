@@ -336,7 +336,6 @@
          :all-scores
          :relevant-scores
          :collection_effective_ancestors
-         :trashed_from_collection_id
          :collection_id
          :collection_location
          :collection_name
