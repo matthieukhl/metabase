@@ -72,7 +72,7 @@ export const ParametersList = ({
       setEditingParameter={setEditingParameter}
       setValue={
         setParameterValue &&
-        ((value: string) =>
+        ((value: any) =>
           setParameterValue(valuePopulatedParameter.id, value))
       }
       setParameterValueToDefault={setParameterValueToDefault}
