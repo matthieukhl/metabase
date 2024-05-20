@@ -303,7 +303,10 @@ const buildEChartsBarSeries = (
     },
   };
 
-  if (settings["stackable.stack_type"] != null) {
+  if (
+    !settings["graph.show_values"] ||
+    settings["stackable.stack_type"] != null
+  ) {
     return seriesOption;
   }
 
