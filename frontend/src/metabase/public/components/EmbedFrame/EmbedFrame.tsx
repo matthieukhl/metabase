@@ -69,7 +69,7 @@ interface OwnProps {
   draftParameterValues?: ParameterValues;
   hiddenParameterSlugs?: string;
   enableParameterRequiredBehavior?: boolean;
-  setParameterValue?: (parameterId: ParameterId, value: any) => void;
+  setParameterValue: (parameterId: ParameterId, value: any) => void;
   setParameterValueToDefault: (id: ParameterId) => void;
   children: ReactNode;
   dashboardTabs?: ReactNode;
