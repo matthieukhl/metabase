@@ -333,7 +333,7 @@ const buildEChartsBarSeries = (
   if (seriesOption?.label != null) {
     seriesOption.label.show = false;
   }
-  if (seriesOption?.emphasis?.label != null) {
+  if (seriesOption?.emphasis != null) {
     seriesOption.emphasis.label = { show: true };
   }
 
