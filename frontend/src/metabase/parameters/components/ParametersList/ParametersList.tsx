@@ -21,15 +21,15 @@ const getId = (valuePopulatedParameter: Parameter) =>
 export const ParametersList = ({
   className,
   commitImmediately = false,
-  dashboard,
-  editingParameter,
+  dashboard = null,
+  editingParameter = null,
   enableParameterRequiredBehavior,
-  hideParameters,
+  hideParameters = null,
   isEditing,
   isFullscreen,
   isNightMode,
   parameters,
-  question,
+  question = null,
   setEditingParameter,
   setParameterIndex,
   setParameterValue,
@@ -72,7 +72,8 @@ export const ParametersList = ({
       setEditingParameter={setEditingParameter}
       setValue={
         setParameterValue &&
-        ((value: any) => setParameterValue(valuePopulatedParameter.id, value))
+        ((value: unknown) =>
+          setParameterValue(valuePopulatedParameter.id, value))
       }
       setParameterValueToDefault={setParameterValueToDefault}
       enableParameterRequiredBehavior={enableParameterRequiredBehavior}

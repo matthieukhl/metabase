@@ -32,7 +32,7 @@ export function buildHiddenParametersSlugSet(
 
 export function getVisibleParameters(
   parameters: UiParameter[],
-  hiddenParameterSlugs?: string | null,
+  hiddenParameterSlugs: string | null = null,
 ) {
   const hiddenParametersSlugSet =
     buildHiddenParametersSlugSet(hiddenParameterSlugs);

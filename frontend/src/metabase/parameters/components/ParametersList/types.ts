@@ -10,18 +10,18 @@ export type ParametersListProps = {
   parameters: Parameter[];
 } & Partial<
   {
-    className?: string;
-    question?: Question;
-    dashboard?: Dashboard | null;
+    className: string;
+    question: Question | null;
+    dashboard: Dashboard | null;
     editingParameter?: Parameter | null;
-    isEditing?: boolean;
-    vertical?: boolean;
-    commitImmediately?: boolean;
-    setParameterValueToDefault?: (parameterId: ParameterId) => void;
-    setParameterValue?: (parameterId: ParameterId, value: string) => void;
-    setParameterIndex?: (id: ParameterId, index: number) => void;
-    setEditingParameter?: (id: ParameterId) => void;
-    enableParameterRequiredBehavior?: boolean;
+    isEditing: boolean;
+    vertical: boolean;
+    commitImmediately: boolean;
+    setParameterValueToDefault: (parameterId: ParameterId) => void;
+    setParameterValue: (parameterId: ParameterId, value: unknown) => void;
+    setParameterIndex: (id: ParameterId, index: number) => void;
+    setEditingParameter: (id: ParameterId) => void;
+    enableParameterRequiredBehavior: boolean;
   } & Pick<DashboardFullscreenControls, "isFullscreen"> &
     Pick<DashboardThemeControls, "isNightMode"> &
     Pick<DashboardHideParametersControls, "hideParameters">
