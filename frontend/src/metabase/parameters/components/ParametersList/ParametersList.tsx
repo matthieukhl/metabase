@@ -19,20 +19,20 @@ const getId = (valuePopulatedParameter: Parameter) =>
   valuePopulatedParameter.id;
 
 export const ParametersList = ({
-  className,
+  parameters,
+  setParameterValue,
+  className = undefined,
   commitImmediately = false,
   dashboard = null,
   editingParameter = null,
   enableParameterRequiredBehavior,
   hideParameters = null,
-  isEditing,
-  isFullscreen,
-  isNightMode,
-  parameters,
+  isEditing = false,
+  isFullscreen = false,
+  isNightMode = false,
   question = null,
   setEditingParameter,
   setParameterIndex,
-  setParameterValue,
   setParameterValueToDefault,
   vertical = false,
 }: ParametersListProps) => {

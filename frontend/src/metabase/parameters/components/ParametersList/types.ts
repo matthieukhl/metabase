@@ -8,6 +8,7 @@ import type { Dashboard, Parameter, ParameterId } from "metabase-types/api";
 
 export type ParametersListProps = {
   parameters: Parameter[];
+  setParameterValue: (parameterId: ParameterId, value: any) => void;
 } & Partial<
   {
     className: string;
@@ -18,7 +19,6 @@ export type ParametersListProps = {
     vertical: boolean;
     commitImmediately: boolean;
     setParameterValueToDefault: (parameterId: ParameterId) => void;
-    setParameterValue: (parameterId: ParameterId, value: unknown) => void;
     setParameterIndex: (id: ParameterId, index: number) => void;
     setEditingParameter: (id: ParameterId) => void;
     enableParameterRequiredBehavior: boolean;
