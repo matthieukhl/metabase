@@ -1,7 +1,7 @@
 import type {
   DashboardFullscreenControls,
-  DashboardHideParametersControls,
-  DashboardThemeControls,
+  EmbedHideParametersControls,
+  EmbedThemeControls,
 } from "metabase/dashboard/hoc/controls";
 import type Question from "metabase-lib/v1/Question";
 import type { Dashboard, Parameter, ParameterId } from "metabase-types/api";
@@ -23,6 +23,6 @@ export type ParametersListProps = {
     setEditingParameter: (id: ParameterId) => void;
     enableParameterRequiredBehavior: boolean;
   } & Pick<DashboardFullscreenControls, "isFullscreen"> &
-    Pick<DashboardThemeControls, "isNightMode"> &
-    Pick<DashboardHideParametersControls, "hideParameters">
+    Pick<EmbedThemeControls, "isNightMode"> &
+    Pick<EmbedHideParametersControls, "hideParameters">
 >;
