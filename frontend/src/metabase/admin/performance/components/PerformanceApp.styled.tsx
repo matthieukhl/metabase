@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 
 import { color } from "metabase/lib/colors";
-import { Tabs } from "metabase/ui";
+import { Flex, Tabs } from "metabase/ui";
 
 export const TabsList = styled(Tabs.List)`
   padding: 0 2.5rem;
@@ -29,4 +29,10 @@ export const TabsPanel = styled(Tabs.Panel)`
   flex: 1;
   overflow: hidden;
   justify-content: stretch;
+`;
+
+export const TabBody = styled(Flex)`
+  flex: 1;
+  background-color: color("bg-light");
+  height: 100%;
 `;

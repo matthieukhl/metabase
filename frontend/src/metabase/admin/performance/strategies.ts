@@ -18,11 +18,19 @@ export type UpdateTargetId = (
   isFormDirty: boolean,
 ) => void;
 
+export type UpdateTarget = (
+  newValues: { id: number | null; model: CacheableModel },
+  isFormDirty: boolean,
+) => void;
+
+/**
+ * The human-readable label for the strategy, which can be a string
+ * or a function that takes a model and returns a string, since the label
+ * can vary depending on the model */
 type StrategyLabel = string | ((model?: CacheableModel) => string);
 
 type StrategyData = {
-  /**
-   * The human-readable label for the strategy, which can be a string or a function that takes a model and returns a string */
+  /** The human-readable label for the strategy */
   label: StrategyLabel;
   shortLabel?: StrategyLabel;
   validateWith: AnySchema;

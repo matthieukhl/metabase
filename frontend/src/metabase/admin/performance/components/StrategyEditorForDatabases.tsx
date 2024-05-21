@@ -170,7 +170,6 @@ const StrategyEditorForDatabases_Base = ({
               saveStrategy={saveStrategy}
               savedStrategy={savedStrategy}
               shouldAllowInvalidation={shouldAllowInvalidation}
-              formStyle={{ overflow: "auto" }}
               shouldShowName={targetId !== rootId}
             />
           )}

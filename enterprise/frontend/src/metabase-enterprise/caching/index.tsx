@@ -2,12 +2,14 @@ import { PLUGIN_CACHING, PLUGIN_FORM_WIDGETS } from "metabase/plugins";
 import { hasPremiumFeature } from "metabase-enterprise/settings";
 
 import CacheTTLField from "./components/CacheTTLField";
+import { DashboardAndQuestionCachingTab } from "./components/DashboardAndQuestionCachingTab";
 import { DashboardStrategySidebar } from "./components/DashboardStrategySidebar";
 import { GranularControlsExplanation } from "./components/GranularControlsExplanation";
 import { InvalidateNowButton } from "./components/InvalidateNowButton";
 import QuestionCacheTTLField from "./components/QuestionCacheTTLField";
 import { SidebarCacheForm } from "./components/SidebarCacheForm";
 import { SidebarCacheSection } from "./components/SidebarCacheSection";
+import { StrategyEditorForOverrides } from "./components/StrategyEditorForOverrides";
 import { StrategyFormLauncherPanel } from "./components/StrategyFormLauncherPanel";
 import {
   getQuestionsImplicitCacheTTL,
@@ -36,4 +38,7 @@ if (hasPremiumFeature("cache_granular_controls")) {
   PLUGIN_CACHING.DashboardStrategySidebar = DashboardStrategySidebar;
   PLUGIN_CACHING.SidebarCacheSection = SidebarCacheSection;
   PLUGIN_CACHING.SidebarCacheForm = SidebarCacheForm;
+  PLUGIN_CACHING.DashboardAndQuestionCachingTab =
+    DashboardAndQuestionCachingTab;
+  PLUGIN_CACHING.StrategyEditorForOverrides = StrategyEditorForOverrides;
 }

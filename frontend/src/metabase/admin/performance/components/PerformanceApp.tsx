@@ -2,14 +2,16 @@ import { useLayoutEffect, useRef, useState } from "react";
 import type { Route } from "react-router";
 import { t } from "ttag";
 
+import { PLUGIN_CACHING } from "metabase/plugins";
 import type { TabsValue } from "metabase/ui";
-import { Flex, Tabs } from "metabase/ui";
+import { Tabs } from "metabase/ui";
 
-import { Tab, TabsList, TabsPanel } from "./PerformanceApp.styled";
+import { Tab, TabBody, TabsList, TabsPanel } from "./PerformanceApp.styled";
 import { StrategyEditorForDatabases } from "./StrategyEditorForDatabases";
 
 export enum TabId {
   DataCachingSettings = "dataCachingSettings",
+  DashboardAndQuestionCaching = "dashboardAndQuestionCaching",
 }
 const validTabIds = new Set(Object.values(TabId).map(String));
 const isValidTabId = (tab: TabsValue): tab is TabId =>
@@ -58,11 +60,19 @@ export const PerformanceApp = ({ route }: { route: Route }) => {
         <Tab key="DataCachingSettings" value={TabId.DataCachingSettings}>
           {t`Data caching settings`}
         </Tab>
+        <PLUGIN_CACHING.DashboardAndQuestionCachingTab />
       </TabsList>
       <TabsPanel key={tabId} value={tabId} p="1rem 2.5rem">
-        <Flex style={{ flex: 1 }} bg="bg-light" h="100%">
-          <StrategyEditorForDatabases route={route} />
-        </Flex>
+        {tabId === TabId.DataCachingSettings && (
+          <TabBody>
+            <StrategyEditorForDatabases route={route} />
+          </TabBody>
+        )}
+        {tabId === TabId.DashboardAndQuestionCaching && (
+          <TabBody>
+            <PLUGIN_CACHING.StrategyEditorForOverrides route={route} />
+          </TabBody>
+        )}
       </TabsPanel>
     </Tabs>
   );
