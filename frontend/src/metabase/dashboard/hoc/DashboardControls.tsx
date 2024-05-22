@@ -6,6 +6,10 @@ import {
   useDashboardUrlParams,
   useRefreshDashboard,
 } from "metabase/dashboard/hooks";
+import {
+  setEmbedDashboardEndpoints,
+  setPublicDashboardEndpoints,
+} from "metabase/services";
 
 import type {
   DashboardControlsPassedProps,
@@ -23,12 +27,15 @@ export const DashboardControls = <T extends DashboardControlsProps>(
   function DashboardControlsInner({
     dashboardId,
     location,
+    params,
     ...props
   }: DashboardControlsProps) {
     const queryParams = location.query;
 
+    const dashId = String(dashboardId || params?.uuid || params?.token);
+
     const { refreshDashboard } = useRefreshDashboard({
-      dashboardId,
+      dashboardId: dashId,
       queryParams,
     });
 
@@ -59,10 +66,16 @@ export const DashboardControls = <T extends DashboardControlsProps>(
 
     useSyncURLSlug({ location });
 
+    if (params?.uuid) {
+      setPublicDashboardEndpoints();
+    } else if (params?.token) {
+      setEmbedDashboardEndpoints();
+    }
+
     return (
       <ComposedComponent
         {...(props as T)}
-        dashboardId={dashboardId}
+        dashboardId={dashId}
         location={location}
         isFullscreen={isFullscreen}
         refreshPeriod={refreshPeriod}

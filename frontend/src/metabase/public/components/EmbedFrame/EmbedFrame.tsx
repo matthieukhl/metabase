@@ -1,10 +1,6 @@
 import cx from "classnames";
-import * as console from "console";
-import type { Location } from "history";
-import type { ReactNode } from "react";
+import type { ReactNode, JSX } from "react";
 import { useEffect, useState } from "react";
-import { connect } from "react-redux";
-import { withRouter } from "react-router";
 import { useMount } from "react-use";
 import _ from "underscore";
 
@@ -14,17 +10,13 @@ import {
   FixedWidthContainer,
   ParametersFixedWidthContainer,
 } from "metabase/dashboard/components/Dashboard/Dashboard.styled";
-import { parseHashOptions } from "metabase/lib/browser";
-import {
-  initializeIframeResizer,
-  isSmallScreen,
-  isWithinIframe,
-} from "metabase/lib/dom";
-import { useDispatch } from "metabase/lib/redux";
+import { initializeIframeResizer, isSmallScreen } from "metabase/lib/dom";
+import { useSelector } from "metabase/lib/redux";
 import { FilterApplyButton } from "metabase/parameters/components/FilterApplyButton";
+import { ParametersList } from "metabase/parameters/components/ParametersList";
 import { SyncedParametersList } from "metabase/parameters/components/ParametersList/SyncedParametersList";
 import { getVisibleParameters } from "metabase/parameters/utils/ui";
-import { setInitialUrlOptions } from "metabase/redux/embed";
+import { getIsEmbeddingSdk } from "metabase/selectors/embed";
 import { getSetting } from "metabase/selectors/settings";
 import type Question from "metabase-lib/v1/Question";
 import { getValuePopulatedParameters } from "metabase-lib/v1/parameters/utils/parameter-values";
@@ -34,7 +26,6 @@ import type {
   ParameterId,
   ParameterValueOrArray,
 } from "metabase-types/api";
-import type { State } from "metabase-types/store";
 
 import type { DashboardUrlHashOptions } from "../../../dashboard/types";
 import ParameterValueWidgetS from "../../../parameters/components/ParameterValueWidget.module.css";
@@ -55,41 +46,28 @@ import {
 } from "./EmbedFrame.styled";
 import LogoBadge from "./LogoBadge";
 
-type ParameterValues = Record<ParameterId, ParameterValueOrArray>;
+type ParameterValues = Record<ParameterId, ParameterValueOrArray | null>;
 
-interface OwnProps {
-  className?: string;
-  name?: string;
-  description?: string;
-  question?: Question;
-  dashboard?: Dashboard;
-  actionButtons?: JSX.Element[];
-  footerVariant?: FooterVariant;
-  parameters?: Parameter[];
-  parameterValues?: ParameterValues;
-  draftParameterValues?: ParameterValues;
-  hiddenParameterSlugs?: string;
-  enableParameterRequiredBehavior?: boolean;
-  setParameterValue: (parameterId: ParameterId, value: any) => void;
-  setParameterValueToDefault: (id: ParameterId) => void;
-  children: ReactNode;
-  dashboardTabs?: ReactNode;
-}
-
-interface StateProps {
-  hasEmbedBranding: boolean;
-}
-
-type Props = OwnProps &
-  StateProps & {
-    location: Location;
-  };
-
-function mapStateToProps(state: State) {
-  return {
-    hasEmbedBranding: !getSetting(state, "hide-embed-branding?"),
-  };
-}
+export type EmbedFrameProps = Partial<
+  {
+    className: string;
+    name: string | null;
+    description: string | null;
+    question: Question;
+    dashboard: Dashboard | null;
+    actionButtons: JSX.Element | null;
+    footerVariant: FooterVariant;
+    parameters: Parameter[];
+    parameterValues: ParameterValues;
+    draftParameterValues: ParameterValues;
+    hiddenParameterSlugs: string;
+    enableParameterRequiredBehavior: boolean;
+    setParameterValue: (parameterId: ParameterId, value: any) => void;
+    setParameterValueToDefault: (id: ParameterId) => void;
+    children: ReactNode;
+    dashboardTabs: ReactNode;
+  } & DashboardUrlHashOptions
+>;
 
 const EMBED_THEME_CLASSES = (theme: DashboardUrlHashOptions["theme"]) => {
   if (!theme) {
@@ -115,8 +93,6 @@ function EmbedFrame({
   actionButtons,
   dashboardTabs = null,
   footerVariant = "default",
-  location,
-  hasEmbedBranding,
   parameters,
   parameterValues,
   draftParameterValues,
@@ -124,7 +100,19 @@ function EmbedFrame({
   setParameterValue,
   setParameterValueToDefault,
   enableParameterRequiredBehavior,
-}: Props) {
+  hide_parameters,
+  bordered,
+  titled,
+  theme,
+  hide_download_button,
+}: EmbedFrameProps) {
+  const isSdk = useSelector(getIsEmbeddingSdk);
+  const hasEmbedBranding = useSelector(
+    state => !getSetting(state, "hide-embed-branding?"),
+  );
+
+  const ParametersListComponent = isSdk ? ParametersList : SyncedParametersList;
+
   const [hasFrameScroll, setHasFrameScroll] = useState(true);
   const [hasInnerScroll, setHasInnerScroll] = useState(
     document.documentElement.scrollTop > 0,
@@ -146,23 +134,6 @@ function EmbedFrame({
 
     return () => document.removeEventListener("scroll", handleScroll);
   }, []);
-
-  const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(setInitialUrlOptions(location));
-  }, [dispatch, location]);
-
-  const {
-    bordered = isWithinIframe(),
-    titled = true,
-    theme,
-    hide_parameters,
-    hide_download_button,
-  } = parseHashOptions(location.hash) as DashboardUrlHashOptions;
-
-  useEffect(() => {
-    console.log(location.hash, parseHashOptions(location.hash));
-  }, [location.hash]);
 
   const hideParameters = [hide_parameters, hiddenParameterSlugs]
     .filter(Boolean)
@@ -241,7 +212,7 @@ function EmbedFrame({
               data-testid="fixed-width-filters"
               isFixedWidth={dashboard?.width === "fixed"}
             >
-              <SyncedParametersList
+              <ParametersListComponent
                 question={question}
                 dashboard={dashboard}
                 parameters={getValuePopulatedParameters({
@@ -250,7 +221,9 @@ function EmbedFrame({
                     ? parameterValues
                     : draftParameterValues,
                 })}
-                setParameterValue={setParameterValue}
+                setParameterValue={(parameterId, value) =>
+                  setParameterValue?.(parameterId, value)
+                }
                 hideParameters={hideParameters}
                 setParameterValueToDefault={setParameterValueToDefault}
                 enableParameterRequiredBehavior={
@@ -291,4 +264,4 @@ function isParametersWidgetContainersSticky(parameterCount: number) {
 }
 
 // eslint-disable-next-line import/no-default-export -- deprecated usage
-export default _.compose(connect(mapStateToProps), withRouter)(EmbedFrame);
+export default EmbedFrame;

@@ -3,10 +3,9 @@ import { Route } from "react-router";
 
 import { mockSettings } from "__support__/settings";
 import { getIcon, renderWithProviders, screen } from "__support__/ui";
+import { SyncedEmbedFrame } from "metabase/public/components/EmbedFrame/SyncedEmbedFrame";
 import type { AppErrorDescriptor } from "metabase-types/store";
 import { createMockAppState } from "metabase-types/store/mocks";
-
-import EmbedFrame from "../../components/EmbedFrame";
 
 import PublicApp from "./PublicApp";
 
@@ -33,9 +32,9 @@ function setup({
       path="/public/dashboard/:id"
       component={props => (
         <PublicApp {...props}>
-          <EmbedFrame {...embedFrameProps}>
+          <SyncedEmbedFrame {...embedFrameProps}>
             <h1 data-testid="test-content">Test</h1>
-          </EmbedFrame>
+          </SyncedEmbedFrame>
         </PublicApp>
       )}
     />,

@@ -1,7 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { useEmbedTheme } from "metabase/dashboard/hooks/use-embed-theme";
 import { isWithinIframe } from "metabase/lib/dom";
+import { useDispatch } from "metabase/lib/redux";
+import { setOptions } from "metabase/redux/embed";
 
 import type { EmbedDisplayControls, EmbedDisplayParams } from "../types";
 
@@ -14,17 +16,19 @@ export const DEFAULT_EMBED_DISPLAY_OPTIONS: EmbedDisplayParams = {
   theme: null,
 };
 
-export const useEmbedDisplayOptions = (): EmbedDisplayControls => {
+export const useEmbedDisplayOptions = (
+  defaultOptions = DEFAULT_EMBED_DISPLAY_OPTIONS,
+): EmbedDisplayControls => {
   const [bordered, setBordered] = useState(
-    isWithinIframe() || DEFAULT_EMBED_DISPLAY_OPTIONS.bordered,
+    isWithinIframe() || defaultOptions.bordered,
   );
-  const [titled, setTitled] = useState(DEFAULT_EMBED_DISPLAY_OPTIONS.titled);
+  const [titled, setTitled] = useState(defaultOptions.titled);
   const [hideDownloadButton, setHideDownloadButton] = useState(
-    DEFAULT_EMBED_DISPLAY_OPTIONS.hideDownloadButton,
+    defaultOptions.hideDownloadButton,
   );
-  const [font, setFont] = useState(DEFAULT_EMBED_DISPLAY_OPTIONS.font);
+  const [font, setFont] = useState(defaultOptions.font);
   const [hideParameters, setHideParameters] = useState(
-    DEFAULT_EMBED_DISPLAY_OPTIONS.hideParameters,
+    defaultOptions.hideParameters,
   );
   const {
     hasNightModeToggle,
@@ -33,6 +37,15 @@ export const useEmbedDisplayOptions = (): EmbedDisplayControls => {
     setTheme,
     theme,
   } = useEmbedTheme();
+
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(
+      setOptions({
+        font: font ?? undefined,
+      }),
+    );
+  }, [dispatch, font]);
 
   return {
     bordered,

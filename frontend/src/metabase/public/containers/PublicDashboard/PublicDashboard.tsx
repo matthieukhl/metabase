@@ -23,10 +23,7 @@ import { getDashboardActions } from "metabase/dashboard/components/DashboardActi
 import { DashboardGridConnected } from "metabase/dashboard/components/DashboardGrid";
 import { DashboardTabs } from "metabase/dashboard/components/DashboardTabs";
 import { DashboardControls } from "metabase/dashboard/hoc/DashboardControls";
-import type {
-  DashboardControlsPassedProps,
-  DashboardControlsProps,
-} from "metabase/dashboard/hoc/types";
+import type { DashboardControlsProps } from "metabase/dashboard/hoc/types";
 import {
   getDashboardComplete,
   getCardData,
@@ -39,6 +36,7 @@ import {
 import type {
   FetchDashboardResult,
   SuccessfulFetchDashboardResult,
+  DashboardDisplayOptionControls,
 } from "metabase/dashboard/types";
 import { isActionDashCard } from "metabase/dashboard/utils";
 import title from "metabase/hoc/Title";
@@ -46,10 +44,6 @@ import { isWithinIframe } from "metabase/lib/dom";
 import ParametersS from "metabase/parameters/components/ParameterValueWidget.module.css";
 import { setErrorPage } from "metabase/redux/app";
 import { getMetadata } from "metabase/selectors/metadata";
-import {
-  setPublicDashboardEndpoints,
-  setEmbedDashboardEndpoints,
-} from "metabase/services";
 import type { Mode } from "metabase/visualizations/click-actions/Mode";
 import { PublicMode } from "metabase/visualizations/click-actions/modes/PublicMode";
 import type { Dashboard, DashboardId } from "metabase-types/api";
@@ -59,12 +53,8 @@ import EmbedFrame from "../../components/EmbedFrame";
 
 import { DashboardContainer } from "./PublicDashboard.styled";
 
-const mapStateToProps = (state: State, props: OwnProps) => {
+const mapStateToProps = (state: State) => {
   return {
-    // this MUST go here, so it's passed to DashboardControls in the _.compose at the bottom
-    dashboardId: String(
-      props.params.dashboardId || props.params.uuid || props.params.token,
-    ),
     metadata: getMetadata(state),
     dashboard: getDashboardComplete(state),
     dashcardData: getCardData(state),
@@ -83,8 +73,6 @@ const mapDispatchToProps = {
   setParameterValueToDefault,
   setParameterValue,
   setErrorPage,
-
-  // these two must also go here, so it's passed to DashboardControls in the _.compose at the bottom
   fetchDashboard,
   fetchDashboardCardData,
 };
@@ -94,16 +82,14 @@ const connector = connect(mapStateToProps, mapDispatchToProps);
 type ReduxProps = ConnectedProps<typeof connector>;
 
 type OwnProps = {
-  params: {
-    dashboardId?: DashboardId;
-    uuid?: string;
-    token?: string;
-  };
-} & DashboardControlsProps;
+  dashboardId: DashboardId;
+};
 
-type PublicDashboardProps = ReduxProps &
-  OwnProps &
-  DashboardControlsPassedProps;
+type PublicDashboardProps = OwnProps &
+  ReduxProps &
+  DashboardDisplayOptionControls & {
+    queryParams: Record<string, string | string[] | null | undefined>;
+  };
 
 class PublicDashboardInner extends Component<PublicDashboardProps> {
   _initialize = async () => {
@@ -113,18 +99,13 @@ class PublicDashboardInner extends Component<PublicDashboardProps> {
       fetchDashboardCardData,
       setErrorPage,
       queryParams,
-      params: { uuid, token },
+      dashboardId,
     } = this.props;
-    if (uuid) {
-      setPublicDashboardEndpoints();
-    } else if (token) {
-      setEmbedDashboardEndpoints();
-    }
 
     initialize();
 
     const result = await fetchDashboard({
-      dashId: String(uuid || token),
+      dashId: dashboardId,
       queryParams,
     });
 
@@ -209,6 +190,11 @@ class PublicDashboardInner extends Component<PublicDashboardProps> {
       refreshPeriod,
       setRefreshElapsedHook,
       hasNightModeToggle,
+      bordered,
+      titled,
+      theme,
+      hideParameters,
+      hideDownloadButton,
     } = this.props;
 
     const buttons = !isWithinIframe()
@@ -243,7 +229,7 @@ class PublicDashboardInner extends Component<PublicDashboardProps> {
         setParameterValueToDefault={setParameterValueToDefault}
         enableParameterRequiredBehavior
         actionButtons={
-          buttons.length > 0 && <div className={CS.flex}>{buttons}</div>
+          buttons.length > 0 ? <div className={CS.flex}>{buttons}</div> : null
         }
         dashboardTabs={
           dashboard?.tabs &&
@@ -251,6 +237,11 @@ class PublicDashboardInner extends Component<PublicDashboardProps> {
             <DashboardTabs dashboardId={this.props.dashboardId} />
           )
         }
+        bordered={bordered}
+        titled={titled}
+        theme={theme}
+        hide_parameters={hideParameters}
+        hide_download_button={hideDownloadButton}
       >
         <LoadingAndErrorWrapper
           className={cx({
@@ -304,4 +295,13 @@ export const PublicDashboard = _.compose(
     ({ dashboard }: { dashboard: Dashboard }) => dashboard && dashboard.name,
   ),
   DashboardControls,
-)(PublicDashboardInner) as ComponentType<OwnProps>;
+)(PublicDashboardInner) as ComponentType<OwnProps & DashboardControlsProps>;
+
+export const PublicDashboardRaw = connector(
+  PublicDashboardInner,
+) as ComponentType<
+  DashboardDisplayOptionControls &
+    OwnProps & {
+      queryParams: Record<string, unknown>;
+    }
+>;

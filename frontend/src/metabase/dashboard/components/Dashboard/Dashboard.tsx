@@ -669,4 +669,4 @@ function isSuccessfulFetchDashboardResult(
   return !hasError;
 }
 
-export const Dashboard = DashboardControls(DashboardInner);
+export const Dashboard = DashboardControls<DashboardProps>(DashboardInner);
