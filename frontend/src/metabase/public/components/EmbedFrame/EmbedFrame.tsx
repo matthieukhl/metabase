@@ -1,4 +1,5 @@
 import cx from "classnames";
+import * as console from "console";
 import type { Location } from "history";
 import type { ReactNode } from "react";
 import { useEffect, useState } from "react";
@@ -13,7 +14,6 @@ import {
   FixedWidthContainer,
   ParametersFixedWidthContainer,
 } from "metabase/dashboard/components/Dashboard/Dashboard.styled";
-import type { DashboardUrlHashOptions } from "metabase/dashboard/hoc/controls/types";
 import { parseHashOptions } from "metabase/lib/browser";
 import {
   initializeIframeResizer,
@@ -36,6 +36,7 @@ import type {
 } from "metabase-types/api";
 import type { State } from "metabase-types/store";
 
+import type { DashboardUrlHashOptions } from "../../../dashboard/types";
 import ParameterValueWidgetS from "../../../parameters/components/ParameterValueWidget.module.css";
 
 import EmbedFrameS from "./EmbedFrame.module.css";
@@ -158,6 +159,10 @@ function EmbedFrame({
     hide_parameters,
     hide_download_button,
   } = parseHashOptions(location.hash) as DashboardUrlHashOptions;
+
+  useEffect(() => {
+    console.log(location.hash, parseHashOptions(location.hash));
+  }, [location.hash]);
 
   const hideParameters = [hide_parameters, hiddenParameterSlugs]
     .filter(Boolean)
