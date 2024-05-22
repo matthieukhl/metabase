@@ -4,12 +4,11 @@ import { setDisplayTheme } from "metabase/dashboard/actions";
 import { getDisplayTheme } from "metabase/dashboard/selectors";
 import { useDispatch, useSelector } from "metabase/lib/redux";
 import type { DisplayTheme } from "metabase/public/lib/types";
-import { setOptions } from "metabase/redux/embed";
 
 import type { EmbedThemeControls } from "../types";
 
 export const useEmbedTheme = (
-  initialValue: DisplayTheme,
+  initialValue: DisplayTheme = null,
 ): EmbedThemeControls => {
   const dispatch = useDispatch();
 
@@ -32,10 +31,6 @@ export const useEmbedTheme = (
       setTheme(initialValue);
     }
   }, [initialValue, setTheme]);
-
-  useEffect(() => {
-    dispatch(setOptions({ theme }));
-  }, [dispatch, theme]);
 
   return {
     theme,

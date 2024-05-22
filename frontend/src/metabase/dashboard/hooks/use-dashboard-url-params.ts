@@ -22,16 +22,17 @@ import { useDispatch } from "metabase/lib/redux";
 import { isNullOrUndefined } from "metabase/lib/types";
 import type { DisplayTheme } from "metabase/public/lib/types";
 
-const DEFAULT_DASHBOARD_EMBED_DISPLAY_OPTIONS: Record<string, any> = {
-  ...DEFAULT_EMBED_DISPLAY_OPTIONS,
-  fullscreen: false,
-  refresh: null,
-};
+export const DEFAULT_DASHBOARD_EMBED_DISPLAY_OPTIONS: DashboardUrlHashOptions =
+  {
+    ...DEFAULT_EMBED_DISPLAY_OPTIONS,
+    fullscreen: false,
+    refresh: null,
+  };
 
-const getDefaultDisplayOption = (key: string) =>
+export const getDefaultDisplayOption = (key: keyof DashboardUrlHashOptions) =>
   DEFAULT_DASHBOARD_EMBED_DISPLAY_OPTIONS[key];
 
-const isEmptyOrDefault = (value: any, key: string) =>
+const isEmptyOrDefault = (value: any, key: keyof DashboardUrlHashOptions) =>
   isNullOrUndefined(value) || value === getDefaultDisplayOption(key);
 
 const useLocationSync = <T = any>({

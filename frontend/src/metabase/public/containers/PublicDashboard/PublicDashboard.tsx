@@ -37,6 +37,7 @@ import type {
   FetchDashboardResult,
   SuccessfulFetchDashboardResult,
   DashboardDisplayOptionControls,
+  EmbedDisplayParams,
 } from "metabase/dashboard/types";
 import { isActionDashCard } from "metabase/dashboard/utils";
 import title from "metabase/hoc/Title";
@@ -85,9 +86,22 @@ type OwnProps = {
   dashboardId: DashboardId;
 };
 
+type DisplayProps = Pick<
+  DashboardDisplayOptionControls,
+  | "isFullscreen"
+  | "isNightMode"
+  | "onFullscreenChange"
+  | "onNightModeChange"
+  | "onRefreshPeriodChange"
+  | "refreshPeriod"
+  | "setRefreshElapsedHook"
+  | "hasNightModeToggle"
+>;
+
 type PublicDashboardProps = OwnProps &
   ReduxProps &
-  Partial<DashboardDisplayOptionControls> & {
+  DisplayProps &
+  EmbedDisplayParams & {
     queryParams: Record<string, string | string[] | null | undefined>;
   };
 
@@ -300,7 +314,8 @@ export const PublicDashboard = _.compose(
 export const PublicDashboardRaw = connector(
   PublicDashboardInner,
 ) as ComponentType<
-  DashboardDisplayOptionControls &
+  DisplayProps &
+    EmbedDisplayParams &
     OwnProps & {
       queryParams: Record<string, unknown>;
     }

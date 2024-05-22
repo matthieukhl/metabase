@@ -1,10 +1,14 @@
 import {
+  DEFAULT_EMBED_DISPLAY_OPTIONS,
   useDashboardFullscreen,
   useDashboardRefreshPeriod,
-  useEmbedDisplayOptions,
+  useEmbedTheme,
   useRefreshDashboard,
 } from "metabase/dashboard/hooks";
-import type { DashboardDisplayOptionControls } from "metabase/dashboard/types";
+import type {
+  EmbedDisplayParams,
+  RefreshPeriod,
+} from "metabase/dashboard/types";
 import { PublicDashboardRaw } from "metabase/public/containers/PublicDashboard/PublicDashboard";
 import type {
   DashboardId,
@@ -15,29 +19,18 @@ import type {
 export const StaticDashboard = ({
   dashboardId,
   parameterValues,
-  displayOptions,
+  refreshPeriod: initialRefreshPeriod = null,
+  displayOptions = {},
 }: {
   dashboardId: DashboardId;
   parameterValues: Record<ParameterId, ParameterValueOrArray | null>;
-  displayOptions?: DashboardDisplayOptionControls;
+  refreshPeriod?: RefreshPeriod;
+  displayOptions?: Partial<EmbedDisplayParams>;
 }) => {
-  const {
-    bordered,
-    font,
-    onNightModeChange,
-    hasNightModeToggle,
-    hideDownloadButton,
-    hideParameters,
-    isNightMode,
-    setBordered,
-    setFont,
-    setHideDownloadButton,
-    setHideParameters,
-    setTheme,
-    setTitled,
-    theme,
-    titled,
-  } = useEmbedDisplayOptions(displayOptions);
+  const options: EmbedDisplayParams = {
+    ...DEFAULT_EMBED_DISPLAY_OPTIONS,
+    ...displayOptions,
+  };
 
   const { refreshDashboard } = useRefreshDashboard({
     dashboardId,
@@ -47,28 +40,25 @@ export const StaticDashboard = ({
   const { onRefreshPeriodChange, refreshPeriod, setRefreshElapsedHook } =
     useDashboardRefreshPeriod({
       onRefresh: refreshDashboard,
-      initialRefreshPeriod: displayOptions?.refreshPeriod,
+      initialRefreshPeriod,
     });
+
+  const { hasNightModeToggle, isNightMode, onNightModeChange, theme } =
+    useEmbedTheme(options.theme);
 
   return (
     <PublicDashboardRaw
       dashboardId={dashboardId}
       queryParams={parameterValues}
-      bordered={bordered}
-      font={font}
+      bordered={options.bordered}
+      font={options.font}
       hasNightModeToggle={hasNightModeToggle}
-      hideDownloadButton={hideDownloadButton}
-      hideParameters={hideParameters}
+      hideDownloadButton={options.hideDownloadButton}
+      hideParameters={options.hideParameters}
       isNightMode={isNightMode}
       onNightModeChange={onNightModeChange}
-      setBordered={setBordered}
-      setFont={setFont}
-      setHideDownloadButton={setHideDownloadButton}
-      setHideParameters={setHideParameters}
-      setTheme={setTheme}
-      setTitled={setTitled}
       theme={theme}
-      titled={titled}
+      titled={options.titled}
       isFullscreen={isFullscreen}
       onFullscreenChange={onFullscreenChange}
       refreshPeriod={refreshPeriod}
