@@ -113,7 +113,7 @@ function EmbedFrame({
 
   const ParametersListComponent = isSdk ? ParametersList : SyncedParametersList;
 
-  const [hasFrameScroll, setHasFrameScroll] = useState(true);
+  const [hasFrameScroll, setHasFrameScroll] = useState(!isSdk);
   const [hasInnerScroll, setHasInnerScroll] = useState(
     document.documentElement.scrollTop > 0,
   );

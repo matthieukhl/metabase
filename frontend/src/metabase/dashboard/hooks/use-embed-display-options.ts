@@ -36,7 +36,7 @@ export const useEmbedDisplayOptions = (
     onNightModeChange,
     setTheme,
     theme,
-  } = useEmbedTheme();
+  } = useEmbedTheme(defaultOptions.theme);
 
   const dispatch = useDispatch();
   useEffect(() => {

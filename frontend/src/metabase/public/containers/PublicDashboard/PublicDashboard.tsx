@@ -87,7 +87,7 @@ type OwnProps = {
 
 type PublicDashboardProps = OwnProps &
   ReduxProps &
-  DashboardDisplayOptionControls & {
+  Partial<DashboardDisplayOptionControls> & {
     queryParams: Record<string, string | string[] | null | undefined>;
   };
 

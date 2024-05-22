@@ -24,11 +24,11 @@ export const StaticDashboard = ({
   const {
     bordered,
     font,
+    onNightModeChange,
     hasNightModeToggle,
     hideDownloadButton,
     hideParameters,
     isNightMode,
-    onNightModeChange,
     setBordered,
     setFont,
     setHideDownloadButton,
