@@ -28,6 +28,9 @@ describe("CloudPanel", () => {
     fetchMock.get("path:/api/session/properties", 200);
     fetchMock.post(`path:/api/cloud-migration`, INIT_RESPONSE);
     fetchMock.put(`path:/api/cloud-migration/cancel`, 200);
+    fetchMock.get("path:/api/util/bug_report_details", {
+      "metabase-info": { "run-mode": "prod" },
+    });
   });
 
   afterEach(() => {
@@ -214,9 +217,7 @@ const ERROR_RESPONSE: CloudMigration = {
 
 const expectInitState = async () => {
   expect(
-    await screen.findByText(
-      "It only takes a few clicks to migrate this instance to Metabase Cloud.",
-    ),
+    await screen.findByText(/Migrate this instance to Metabase Cloud/),
   ).toBeInTheDocument();
 };
 
@@ -271,7 +272,7 @@ const startMigration = async (migrationResponses: MockResponse[]) => {
   return { store };
 };
 
-const STORE_LINK = `https://store.staging.metabase.com/checkout?migration-id=${BASE_RESPONSE.external_id}`;
+const STORE_LINK = `https://store.metabase.com/checkout?migration-id=${BASE_RESPONSE.external_id}`;
 
 function fetchMockCloudMigrationGetSequence(responses: MockResponse[]) {
   let called = 0;
