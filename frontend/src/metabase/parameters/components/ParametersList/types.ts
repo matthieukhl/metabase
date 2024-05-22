@@ -2,7 +2,7 @@ import type {
   DashboardFullscreenControls,
   EmbedHideParametersControls,
   EmbedThemeControls,
-} from "metabase/dashboard/hoc/controls";
+} from "metabase/dashboard/types";
 import type Question from "metabase-lib/v1/Question";
 import type { Dashboard, Parameter, ParameterId } from "metabase-types/api";
 
