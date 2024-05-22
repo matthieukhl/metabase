@@ -29,10 +29,10 @@ export const DEFAULT_DASHBOARD_EMBED_DISPLAY_OPTIONS: DashboardUrlHashOptions =
     refresh: null,
   };
 
-export const getDefaultDisplayOption = (key: keyof DashboardUrlHashOptions) =>
-  DEFAULT_DASHBOARD_EMBED_DISPLAY_OPTIONS[key];
+export const getDefaultDisplayOption = (key: string) =>
+  DEFAULT_DASHBOARD_EMBED_DISPLAY_OPTIONS[key as keyof DashboardUrlHashOptions];
 
-const isEmptyOrDefault = (value: any, key: keyof DashboardUrlHashOptions) =>
+const isEmptyOrDefault = (value: any, key: string) =>
   isNullOrUndefined(value) || value === getDefaultDisplayOption(key);
 
 const useLocationSync = <T = any>({
@@ -48,13 +48,13 @@ const useLocationSync = <T = any>({
 }) => {
   const dispatch = useDispatch();
   const previousValue = usePrevious(value) ?? null;
-  const hashValue = useMemo(() => {
+  const hashValue: T | null = useMemo(() => {
     const hashOptions = parseHashOptions(location.hash);
-    return hashOptions[key] ?? (null as T | null);
+    return (hashOptions[key] ?? null) as T | null;
   }, [key, location.hash]);
 
   const latestValue = useMemo(() => {
-    let val: T;
+    let val;
     if (value !== previousValue) {
       val = value;
     } else if (hashValue !== value) {
@@ -63,12 +63,12 @@ const useLocationSync = <T = any>({
       val = value;
     }
 
-    return val;
+    return val as T;
   }, [hashValue, key, previousValue, value]);
 
   useEffect(() => {
     if (latestValue !== previousValue) {
-      onChange(latestValue);
+      onChange(latestValue ?? null);
 
       const hashOptions = parseHashOptions(location.hash);
       const updatedOptions = isEmptyOrDefault(latestValue, key)

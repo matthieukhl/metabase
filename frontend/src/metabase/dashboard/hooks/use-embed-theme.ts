@@ -8,7 +8,7 @@ import type { DisplayTheme } from "metabase/public/lib/types";
 import type { EmbedThemeControls } from "../types";
 
 export const useEmbedTheme = (
-  initialValue: DisplayTheme = null,
+  initialValue: DisplayTheme = "light",
 ): EmbedThemeControls => {
   const dispatch = useDispatch();
 

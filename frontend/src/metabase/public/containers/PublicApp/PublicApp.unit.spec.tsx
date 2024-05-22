@@ -1,4 +1,5 @@
 import userEvent from "@testing-library/user-event";
+import type { JSX } from "react";
 import { Route } from "react-router";
 
 import { mockSettings } from "__support__/settings";
@@ -12,7 +13,7 @@ import PublicApp from "./PublicApp";
 type SetupOpts = {
   name?: string;
   description?: string;
-  actionButtons?: JSX.Element[];
+  actionButtons?: JSX.Element | null;
   error?: AppErrorDescriptor;
   hasEmbedBranding?: boolean;
   hash?: string;
@@ -66,7 +67,13 @@ describe("PublicApp", () => {
   });
 
   it("renders action buttons", () => {
-    setup({ actionButtons: [<button key="test">Click Me</button>] });
+    setup({
+      actionButtons: (
+        <div>
+          <button key="test">Click Me</button>
+        </div>
+      ),
+    });
     expect(
       screen.getByRole("button", { name: "Click Me" }),
     ).toBeInTheDocument();
