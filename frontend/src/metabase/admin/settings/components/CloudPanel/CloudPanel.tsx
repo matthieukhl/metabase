@@ -8,6 +8,7 @@ import {
 import LoadingAndErrorWrapper from "metabase/components/LoadingAndErrorWrapper";
 import { useDispatch } from "metabase/lib/redux";
 import { refreshSiteSettings } from "metabase/redux/settings";
+import { UtilApi } from "metabase/services";
 import { Box, Text } from "metabase/ui";
 import type { CloudMigration } from "metabase-types/api/cloud-migration";
 
@@ -25,7 +26,7 @@ import {
 
 interface CloudPanelProps {
   getPollingInterval: (migration: CloudMigration) => number | undefined;
-  onMigrationStart: (migration: CloudMigration) => void;
+  onMigrationStart: (migration: CloudMigration, isProdStore: boolean) => void;
 }
 
 export const CloudPanel = ({
@@ -36,6 +37,15 @@ export const CloudPanel = ({
   const [pollingInterval, setPollingInterval] = useState<number | undefined>(
     undefined,
   );
+
+  const [isProdStore, setIsProdStore] = useState(true);
+  useEffect(() => {
+    // TODO: figure out a better place to pull this info from...
+    UtilApi.bug_report_details().then(details => {
+      const runMode = details["metabase-info"]["run-mode"];
+      setIsProdStore(runMode !== "dev");
+    });
+  }, []);
 
   const {
     data: migration,
@@ -73,7 +83,7 @@ export const CloudPanel = ({
   const handleCreateMigration = async () => {
     const migration = await createCloudMigration().unwrap();
     await dispatch(refreshSiteSettings({}));
-    onMigrationStart(migration);
+    onMigrationStart(migration, isProdStore);
   };
 
   return (
@@ -90,7 +100,10 @@ export const CloudPanel = ({
 
         <Box mt="2rem">
           {migration && isInProgressMigration(migration) && (
-            <MigrationInProgress migration={migration} />
+            <MigrationInProgress
+              migration={migration}
+              isProdStore={isProdStore}
+            />
           )}
 
           {migration && migrationState === "done" && (
@@ -98,6 +111,7 @@ export const CloudPanel = ({
               migration={migration}
               restartMigration={handleCreateMigration}
               isRestarting={createCloudMigrationResult.isLoading}
+              isProdStore={isProdStore}
             />
           )}
 

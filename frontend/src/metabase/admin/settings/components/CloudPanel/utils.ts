@@ -1,6 +1,5 @@
 import dayjs from "dayjs";
 
-import { isProduction } from "metabase/env";
 import type {
   CloudMigration,
   CloudMigrationState,
@@ -70,13 +69,19 @@ export const defaultGetPollingInterval = (
 export const getMigrationEventTime = (isoString: string) =>
   dayjs(isoString).format("MMMM DD, YYYY, hh:mm A");
 
-export const getCheckoutUrl = (migration: CloudMigration) => {
-  const baseUrl = isProduction
+export const getCheckoutUrl = (
+  migration: CloudMigration,
+  isProdStore: boolean,
+) => {
+  const baseUrl = isProdStore
     ? `https://store.metabase.com`
     : `https://store.staging.metabase.com`;
   return `${baseUrl}/checkout?migration-id=${migration.external_id}`;
 };
 
-export const openCheckoutInNewTab = (migration: CloudMigration) => {
-  window.open(getCheckoutUrl(migration), "_blank")?.focus();
+export const openCheckoutInNewTab = (
+  migration: CloudMigration,
+  isProdStore: boolean,
+) => {
+  window.open(getCheckoutUrl(migration, isProdStore), "_blank")?.focus();
 };

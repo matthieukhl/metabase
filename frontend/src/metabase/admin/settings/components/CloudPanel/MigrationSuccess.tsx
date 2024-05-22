@@ -12,12 +12,14 @@ interface MigrationSuccessProps {
   migration: CloudMigration;
   restartMigration: () => void;
   isRestarting: boolean;
+  isProdStore: boolean;
 }
 
 export const MigrationSuccess = ({
   migration,
   restartMigration,
   isRestarting,
+  isProdStore,
 }: MigrationSuccessProps) => {
   const uploadedAt = getMigrationEventTime(migration.updated_at);
 
@@ -47,7 +49,7 @@ export const MigrationSuccess = ({
           </Text>
 
           <Box mt="1.5rem">
-            <ExternalLink href={getCheckoutUrl(migration)}>
+            <ExternalLink href={getCheckoutUrl(migration, isProdStore)}>
               <Button variant="filled">{t`Go to Metabase Store`}</Button>
             </ExternalLink>
           </Box>
