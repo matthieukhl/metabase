@@ -136,7 +136,7 @@ export const useDashboardUrlParams = ({
   useLocationSync<DisplayTheme>({
     key: "theme",
     value: theme,
-    onChange: setTheme,
+    onChange: value => setTheme(value ?? "light"),
     location,
   });
 

@@ -19,7 +19,7 @@ export const useEmbedTheme = (
   );
 
   const onNightModeChange = (isNightMode: boolean) => {
-    setTheme(isNightMode ? "night" : null);
+    setTheme(isNightMode ? "night" : "light");
   };
 
   const isNightMode = theme === "night";
