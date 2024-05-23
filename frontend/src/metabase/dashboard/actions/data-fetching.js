@@ -3,7 +3,11 @@ import { t } from "ttag";
 
 import { showAutoApplyFiltersToast } from "metabase/dashboard/actions/parameters";
 import { defer } from "metabase/lib/promise";
-import { createAction, createThunkAction } from "metabase/lib/redux";
+import {
+  createAction,
+  createAsyncThunk,
+  createThunkAction,
+} from "metabase/lib/redux";
 import { equals } from "metabase/lib/utils";
 import {
   DashboardApi,
@@ -376,17 +380,16 @@ export const fetchDashboardCardData =
     }
   };
 
-export const fetchDashboardCardMetadata = createThunkAction(
+export const fetchDashboardCardMetadata = createAsyncThunk(
   FETCH_DASHBOARD_CARD_METADATA,
-  () => async (dispatch, getState) => {
-    const allDashCards = getDashboardComplete(getState()).dashcards;
-    const selectedTabId = getSelectedTabId(getState());
-
-    const cards = allDashCards.filter(
-      dc =>
-        selectedTabId !== undefined && dc.dashboard_tab_id === selectedTabId,
-    );
-    await dispatch(loadMetadataForDashboard(cards));
+  async (_, { dispatch, getState }) => {
+    const dashboard = getDashboardComplete(getState());
+    if (dashboard) {
+      const dashboardType = getDashboardType(dashboard.id);
+      if (dashboardType === "normal" || dashboardType === "transient") {
+        await dispatch(loadMetadataForDashboard(dashboard.dashcards));
+      }
+    }
   },
 );
 

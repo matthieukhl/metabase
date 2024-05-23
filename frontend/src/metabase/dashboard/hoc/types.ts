@@ -22,6 +22,7 @@ export type DashboardControlsProps = {
     reload?: boolean;
     clearCache?: boolean;
   }) => Promise<void>;
+  fetchDashboardCardMetadata: () => Promise<void>;
 };
 
 // Passed via ...this.state
