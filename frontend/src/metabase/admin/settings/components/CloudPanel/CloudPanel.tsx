@@ -12,6 +12,7 @@ import { Box, Text } from "metabase/ui";
 import type { CloudMigration } from "metabase-types/api/cloud-migration";
 
 import { MigrationError } from "./MigrationError";
+import { MigrationCreationError, MigrationCreationErrorProps } from "./MigrationCreationError";
 import { MigrationInProgress } from "./MigrationInProgress";
 import { MigrationStart } from "./MigrationStart";
 import { MigrationSuccess } from "./MigrationSuccess";
@@ -103,6 +104,10 @@ export const CloudPanel = ({
 
           {migration && migrationState === "error" && (
             <MigrationError migration={migration} />
+          )}
+
+          {createCloudMigrationResult.isError && (
+            <MigrationCreationError error={createCloudMigrationResult.error as MigrationCreationErrorProps} />
           )}
         </Box>
       </Box>
