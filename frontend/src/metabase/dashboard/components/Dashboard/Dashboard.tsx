@@ -323,6 +323,9 @@ function DashboardInner(props: DashboardProps) {
     }
     if (previousTabId !== selectedTabId) {
       fetchDashboardCardData();
+      if (previousTabId == null) {
+        fetchDashboardCardMetadata();
+      }
       return;
     }
     const didDashboardLoad = !previousDashboard && dashboard;
